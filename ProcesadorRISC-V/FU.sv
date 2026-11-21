@@ -9,12 +9,14 @@ module FU (
     output logic [1:0] ForwardB
 );
 
+    // Selector encoding used by RISCV.sv: 00 = register,
+    // 10 = EX/MEM forwarding, 11 = MEM/WB forwarding.
     always_comb begin
         // Operando A (rs1)
         if (RUWr_MEM && (rd_MEM != 5'd0) && (rd_MEM == rs1_EX))
             ForwardA = 2'b10;
         else if (RUWr_WB && (rd_WB != 5'd0) && (rd_WB == rs1_EX))
-            ForwardA = 2'b01;
+            ForwardA = 2'b11;
         else
             ForwardA = 2'b00;
 
@@ -22,7 +24,7 @@ module FU (
         if (RUWr_MEM && (rd_MEM != 5'd0) && (rd_MEM == rs2_EX))
             ForwardB = 2'b10;
         else if (RUWr_WB && (rd_WB != 5'd0) && (rd_WB == rs2_EX))
-            ForwardB = 2'b01;
+            ForwardB = 2'b11;
         else
             ForwardB = 2'b00;
     end
